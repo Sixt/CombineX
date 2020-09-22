@@ -237,16 +237,20 @@ private extension CXWrappers.Timer.TimerPublisher {
         
         func timerFired() {
             lock.lock()
-            guard demand > 0 else {
+            guard let downstream = self.downstream, demand > 0 else {
                 lock.unlock()
                 return
             }
             demand -= 1
-            if let downstream = self.downstream {
-                // Should it be locked?
-                // It's locked in Combine when receiving value, and result in surprising behaviour (to me).
-                demand += downstream.receive(Date())
+            lock.unlock()
+
+            let newDemand = downstream.receive(Date())
+            guard newDemand > 0 else {
+                return
             }
+
+            lock.lock()
+            demand += newDemand
             lock.unlock()
         }
     }

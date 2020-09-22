@@ -2,7 +2,7 @@ name: CombineX-Carthage
 options:
   bundleIdPrefix: com.github.cx-org
   deploymentTarget:
-    iOS: 8.0
+    iOS: 9.0
     macOS: !!str '10.10'
     tvOS: 9.0
     watchOS: 2.0
